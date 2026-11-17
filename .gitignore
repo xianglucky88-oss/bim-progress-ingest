@@ -35,3 +35,9 @@ id_rsa.*
 **/*connection_string*
 **/*connstr*
 **/*dsn*
+
+# Release outputs (all generated; release-manifest.json and SHA256SUMS are
+# reproducible artifacts produced by release/build.py, never hand-edited)
+/dist/
+/build/
+*.tmp

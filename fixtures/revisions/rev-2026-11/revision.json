@@ -1,0 +1,8 @@
+{
+  "revision_id": "rev-2026-11",
+  "source": "synthetic-baseline",
+  "created_utc": "2026-11-01T00:00:00Z",
+  "input_file": "input.json",
+  "input_sha256": "4ce1f8906519978972655d3a6e1abfd12e293bbf5967926ed512ee27529b86df",
+  "notes": "Second revision sample: extra component G3 and partial updates drive the missing-update and clamping paths."
+}

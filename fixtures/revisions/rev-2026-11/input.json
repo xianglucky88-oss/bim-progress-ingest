@@ -1,0 +1,12 @@
+{
+  "components": [
+    { "guid": "G1", "activity": "A1", "planned": 100 },
+    { "guid": "G2", "activity": "A1", "planned": 50 },
+    { "guid": "G3", "activity": "A2", "planned": 200 }
+  ],
+  "updates": [
+    { "guid": "G1", "actual": 100 },
+    { "guid": "G2", "actual": 10 },
+    { "guid": "G3", "actual": 80 }
+  ]
+}

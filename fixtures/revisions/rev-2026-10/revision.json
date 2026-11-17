@@ -1,0 +1,8 @@
+{
+  "revision_id": "rev-2026-10",
+  "source": "synthetic-baseline",
+  "created_utc": "2026-10-01T00:00:00Z",
+  "input_file": "input.json",
+  "input_sha256": "e2daf98ef2cdf85d9b4b786807a0d64ca061a59a69cbfa091ea76663b444ba79",
+  "notes": "First revision sample used for release smoke checks and rollback tests."
+}

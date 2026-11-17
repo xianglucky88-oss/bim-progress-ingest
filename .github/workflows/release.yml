@@ -1,0 +1,64 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  TZ: UTC
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  SOURCE_DATE_EPOCH: "1793491200"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # No dependency installation is needed: the release flow is stdlib-only.
+      # -B keeps the source tree free of .pyc files; PYTHONPATH makes the
+      # src/ layout importable for this non-isolated test invocation.
+      - name: Unit tests
+        run: PYTHONPATH=src python -B -m unittest discover -s tests -v
+      - name: Deterministic build
+        run: python -I -B release/build.py --out build/release
+      - name: Smoke checks (source tree)
+        run: python -I -B release/smoke.py . --python "$(which python)"
+      - name: Full operational verification
+        run: python -I -B release/verify.py
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-report-py${{ matrix.python-version }}
+          path: build/verify-report.json
+
+  reproducibility:
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build twice in different TZ/cwd
+        run: |
+          python -I -B release/build.py --out /tmp/build-a
+          mkdir -p /tmp/elsewhere
+          TZ=America/New_York python -I -B release/build.py --out /tmp/build-b
+          diff -r /tmp/build-a/dist /tmp/build-b/dist && echo "reproducible: identical dist trees"
+      - name: Confirm archive hashes match manifest
+        run: |
+          cd /tmp/build-a/dist
+          sha256sum -c SHA256SUMS

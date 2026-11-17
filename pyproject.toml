@@ -1,5 +1,16 @@
 [project]
 name = "bim-progress-ingest"
 version = "0.1.0"
+description = "Link BIM components to schedule activities and calculate revision-aware progress."
 requires-python = ">=3.9"
 dependencies = []
+
+[build-system]
+# Standards-compliant wheel/sdist backend. The offline release flow does NOT
+# require pip/network: deploy bundles are built by release/build.py with the
+# stdlib only. Wheels are produced on a best-effort basis when pip is present.
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
